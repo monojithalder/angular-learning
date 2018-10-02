@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+    <style>
+        input.ng-invalid {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <div ng-app="myApp" ng-controller="myCtrl">
+        <p>Name: <input type="text" name="name" ng-model="name" autocomplete="off"></p>
+        <h1>Hello {{ name }}</h1>
+
+        <p>The name is <span ng-bind="firstName"></span> </p>
+
+
+        <p>5 + 5 = {{ 5 + 5  }} </p>
+
+        <p><span w3-test-directive></span></p>
+        <br>
+        <br>
+        <p>Angular Repeat Expample</p>
+        <p>Fruits</p>
+        <ul>
+            <li ng-repeat="x in fruits">
+                {{ x }}
+            </li>
+        </ul>
+
+        <p>Angular Directive Example</p>
+        <testing-fruits></testing-fruits>
+
+        <br>
+        <br>
+        <br>
+        <p>Angular Form Validation</p>
+        <form name="myForm">
+            <p>Email: <input type="email" name="myAddress" ng-model="text" required></p>
+            <p><span ng-show="myForm.myAddress.$error.email">Not a valid Email!</span></p>
+            <p>Name: <input type="text" name="name" ng-model="text1" required></p>
+            <p><span ng-show="myForm.name.$error.required">Name is required</span></p>
+        </form>
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <p>Angular Click Events Example</p>
+        <p>Name: <span ng-bind="fullName"></span></p>
+        <input type="button" value="Show Name" ng-click="showName()">
+        <input type="button" value="Hide Name" ng-click="hideName()">
+        <br>
+        <br>
+        <br>
+        <br>
+        <p>Agluar Get Request Example</p>
+        <ul>
+        <li ng-repeat="x in myData">
+            Name: {{ x }}
+        </li>
+        </ul>
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <p>Angular Route Example</p>
+        <a href="#!/">Home</a>
+        <a href="#!page1">Page1</a>
+        <a href="#!page2">Page2</a>
+        <ng-view></ng-view>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+</body>
+<script>
+    var app = angular.module("myApp", ["ngRoute"]);
+    app.controller("myCtrl", function($scope,$http) {
+        $scope.firstName = "Bocho";
+        $scope.lastName = "Doe";
+        $scope.fullName = "";
+        $scope.fruits = ['Mango','Water Melon','Grapes','Pomegranate','Apple','Blue Berry','Pear','Sweet Lemon','Orange','Litchi'];
+        $scope.showName = function () {
+            $scope.fullName = $scope.firstName + " " +$scope.lastName;
+        }
+        $scope.hideName = function () {
+            $scope.fullName = "";
+        }
+        $http.get("http://localhost/json.php").then(function (response) {
+            $scope.myData = response.data;
+        })
+    });
+
+    app.directive("w3TestDirective", function() {
+        return {
+            template: "I was made in a directive constructor!"
+        };
+    });
+    app.directive("testingFruits", function() {
+        return {
+            template: "<ul><li ng-repeat='x in fruits'>{{ x }}</li></ul>"
+        };
+    });
+    app.config(function($routeProvider) {
+        $routeProvider
+            .when("/", {
+                templateUrl: "main.html"
+            })
+            .when("/page1", {
+                templateUrl: "page1.html"
+            })
+            .when("/page2", {
+                templateUrl: "page2.html"
+            });
+    });
+
+
+</script>
+</html>
